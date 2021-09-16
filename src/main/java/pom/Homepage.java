@@ -4,42 +4,67 @@ import baseAPI.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class Homepage extends BasePage {
 
     public Homepage() {
-        PageFactory.initElements(webDriver, this);
+        PageFactory.initElements(driver, this);
     }
 
-    @FindBy (id = "nav-hamburger-menu")
-    public WebElement allHamburgerMenuButton;
+    @FindBy (css = "#global-nav > ul li.sports.menu-nfl > a")
+    public WebElement navBarNFLDropdown;
 
-    @FindBy (id = "twotabsearchtextbox")
-    public WebElement searchBar;
+    @FindBy (css = "#global-nav > ul li[class='sports menu-nfl hover'] > div > ul:nth-child(1) > li:nth-child(1) a")
+    public WebElement nflHomeButton;
 
-    @FindBy (id = "nav-search-submit-button")
-    public WebElement searchButton;
+    @FindBy (css = "#global-nav > ul li[class='sports menu-nba'] > a")
+    public WebElement navBarNBADropdown;
 
-    @FindBy (id = "nav-link-accountList")
-    public WebElement signInButton;
+    @FindBy (css = "#global-nav > ul li[class='sports menu-nba hover'] > div > ul:nth-child(1) > li:nth-child(1) a")
+    public WebElement nbaHomeButton;
 
-    void sendKeysToSearchBar(String value) {
-        sendKeysToElement(searchBar, value);
+    @FindBy (css = "#global-nav > ul li[class='sports menu-mlb'] > a")
+    public WebElement navBarMLBDropdown;
+
+    @FindBy (css = "#global-nav > ul li[class='sports menu-mlb hover'] > div > ul:nth-child(1) > li:nth-child(1) a")
+    public WebElement mlbHomeButton;
+
+    @FindBy (css = "#global-nav > ul li[class='sports menu-nhl'] > a")
+    public WebElement navBarNHLDropdown;
+
+    @FindBy (css = "#global-nav > ul li[class='sports menu-nhl hover'] > div > ul:nth-child(1) > li:nth-child(1) a")
+    public WebElement nhlHomeButton;
+
+    public String locatorNFLDropdownMenuItems = "//li[@class=\"sports menu-nfl hover\"]/div/ul[1]/li[not(@style)]/a/span/span[1]";
+
+    public MLBHomepage navigateToMLBHomepage() {
+        clickOnElement(navBarMLBDropdown);
+        clickOnElement(mlbHomeButton);
+
+        return new MLBHomepage();
     }
 
-    void clickSearchButton() {
-        clickOnElement(searchButton);
+    public NBAHomepage navigateToNBAHomepage() {
+        clickOnElement(navBarNBADropdown);
+        clickOnElement(nbaHomeButton);
+
+        return new NBAHomepage();
     }
 
-    public void doSearch(String value) {
-        sendKeysToSearchBar(value);
-        clickSearchButton();
+    public NFLHomepage navigateToNFLHomepage() {
+        clickOnElement(navBarNFLDropdown);
+        clickOnElement(nflHomeButton);
+
+        return new NFLHomepage();
     }
 
-    public SignInPage navigateToSignInPage() {
-        clickOnElement(signInButton);
+    public NHLHomepage navigateToNHLHomepage() {
+        clickOnElement(navBarNHLDropdown);
+        clickOnElement(nhlHomeButton);
 
-        return new SignInPage();
+        return new NHLHomepage();
     }
+
 
 }

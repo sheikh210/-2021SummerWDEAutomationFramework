@@ -1,10 +1,9 @@
 package testBase;
 
 import baseAPI.BasePage;
-import pom.AccountPage;
-import pom.ContactUsPage;
-import pom.Homepage;
-import pom.LoginPage;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.WebElement;
+import pom.*;
 
 public class TestBase extends BasePage {
 
@@ -12,10 +11,37 @@ public class TestBase extends BasePage {
         return new Homepage();
     }
 
+    public MLBHomepage getMLBHomepage() {
+        return new MLBHomepage();
+    }
+
+    public NBAHomepage getNBAHomepage() {
+        return new NBAHomepage();
+    }
+
+    public NFLHomepage getNFLHomepage() {
+        return new NFLHomepage();
+    }
+
+    public NHLHomepage getNHLHomepage() {
+        return new NHLHomepage();
+    }
 
 
-    public LoginPage loginPage;
-    public AccountPage accountPage;
-    public ContactUsPage contactUsPage;
+    /*
+    region ASSERTION HELPER METHODS
+     */
+    public boolean isElementPresent(WebElement element) {
+        boolean flag = false;
+
+        try {
+            if (element.isDisplayed()) {
+                flag = true;
+            }
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
 
 }

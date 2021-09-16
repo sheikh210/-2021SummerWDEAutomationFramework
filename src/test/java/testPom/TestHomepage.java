@@ -1,44 +1,63 @@
 package testPom;
 
+import baseAPI.DataReader;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pom.Homepage;
+import pom.MLBHomepage;
 import testBase.TestBase;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestHomepage extends TestBase {
 
-    @Test (description = "TEST ID: 403947", enabled = true, priority = 0, groups = {"Regression", "Smoke", "Sanity"})
-    public void testDoSearch() {
+    @Test (enabled = false)
+    public void testNavigateToMLBHomepage() {
         Homepage homepage = getHomepage();
 
-        String searchTerm = "Playstation 5";
+        MLBHomepage mlbHomepage = homepage.navigateToMLBHomepage();
+        waitForElementToContainText(mlbHomepage.mlbLogoText, "MLB");
 
-        homepage.doSearch(searchTerm);
+        String actualTitle = driver.getTitle();
+        String expTitle = "MLB - Major League Baseball Teams, Scores, Stats, News, Standings, Rumors - ESPN";
 
-        String currentURL = webDriver.getCurrentUrl();
-        String expectedURL = "https://www.amazon.com/s?k=Playstation+5&ref=nb_sb_noss_2";
-
-        Assert.assertEquals(currentURL, expectedURL, "URL DOES NOT MATCH");
+        Assert.assertEquals(actualTitle, expTitle);
     }
 
-    @Test (groups = {"Smoke", "Sanity"}, priority = 1)
-    public void testNavigateToLoginPage() {
+    @Test
+    public void testNFLDropdownMenuListItems() throws IOException {
         Homepage homepage = getHomepage();
+        dataReader = new DataReader();
 
-        homepage.navigateToSignInPage();
-        String actualTitle = webDriver.getTitle();
-        String expectedTitle = "Amazon Sign-In";
+        clickOnElement(homepage.navBarNFLDropdown);
 
-        Assert.assertEquals(actualTitle, expectedTitle);
+        List<WebElement> webElementsList = getListOfElements(By.xpath(homepage.locatorNFLDropdownMenuItems));
+        List<String> actualTextWebElementList = new ArrayList<>();
+
+        for (WebElement element : webElementsList) {
+            actualTextWebElementList.add(element.getText());
+        }
+
+        String relPath = "/src/test/resources/testData/HomepageTestData.xlsx";
+        String sheetName = "testNFLDropdownMenuItems";
+
+        String[] expectedText = dataReader.fileReaderStringXSSF(ABSOLUTE_PATH + relPath, sheetName);
+        SoftAssert softAssert = new SoftAssert();
+
+        int length = actualTextWebElementList.size();
+
+        for (int i = 0; i < length; i++) {
+            System.out.println("EXPECTED: " + expectedText[i] + "\nACTUAL: " + actualTextWebElementList.get(i));
+            softAssert.assertEquals(actualTextWebElementList.get(i), expectedText[i]);
+        }
+        softAssert.assertAll();
     }
 
-//    @Test (priority = 1)
-//    public void testDoSomething() {
-//
-//    }
-//
-//    @Test (priority = 2)
-//    public void testDoSomethingElse() {
-//
-//    }
+
 }
